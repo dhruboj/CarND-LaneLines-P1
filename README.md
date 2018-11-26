@@ -89,6 +89,10 @@ To detect a full line from the bottom of the screen, it should be able to interp
 
 Three vidoes are provided here. My pipeline is successfully running on the 10 & 27 seconds version. My implementation is working great on the first two videos but not working fine on the challenge vidoes where curves are present. As a video is a sequence of frames I used the information from previous frames to smoothen the lines. I used standard _deque_ to store the last 15 computed line coefficients. It is working very well but failing on the optional challenge video.
 
+This is the first test video:
+
+<video src="./test_videos_output/solidWhiteRight.mp4" width="320" height="200" controls preload></video>
+
 ## Shortcomings
 
 I have faced challenges initially in performing the Hough transform. I find it tricky to set the parameters manually. In the challenge video my pipleline is working fine as log as there are straight lines but failing once the curve lines are coming
