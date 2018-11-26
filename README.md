@@ -3,54 +3,87 @@
 
 <img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
 
-Overview
+## Overview
 ---
 
 When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+In this project we will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
+The main goal of this project is to design a pipeline which will find the lane lines on the road easily. In the end I have designed a LaneDetection class to wrap the pipeline to detect the lanes in the videos.
 
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
-
-
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
-
-1. Describe the pipeline
-
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+## Pipeline
+In this section I will cover the steps in detail to create the pipeline, which will hep us to finding the lane lines in the images. Then I will save the output images.The steps to achieve the result is described below:
 
 
-The Project
----
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+- Convert the image to `grayscale` for easier manipulation
+- Apply `Gaussian blur` to smoothening the edges
+- Apply `Canny edge detection`
+- Trace the `region of interest` and discard rest of the regions
+- Perform a `hough transform` to find the lane lines within the `region of interest`and color them red
+- Seperate `left` and `right lanes`
+- `Extrapolate` them to create two smooth lines
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/83ec35ee-1e02-48a5-bdb7-d244bd47c2dc/lessons/8c82408b-a217-4d09-b81d-1bda4c6380ef/concepts/4f1870e0-3849-43e4-b670-12e6f2d4b7a7) if you haven't already.
+### Convert the image to `grayscale` for easier manipulation
 
-**Step 2:** Open the code in a Jupyter Notebook
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
+Here we are going to detect white or yellow lines on images, which show a high contrast if the image is converted to grayscale. In grayscale mode road is black so anything brighter than will come out with high contrast.
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
 
-`> jupyter notebook`
+![gray scale images](test_images_output/grayscale_image)
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+### Apply Gaussian Blur
+Gaussian Blur is a pre-processing technique to smoothen the edges of an image. In OpenCV Gaussian blur takes a odd number of integer kernel_size. For this project I choose the Kernel size 5 by trial & error.
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+![Gaussian Blur Images](test_images_output/gaussian_blur)
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+### Canny Edge Detection
+After successfull completion of Gaussian Blur, I have applied Canny Edge Detector. Canny edge detection is a powerful algorithm to identify the edges in an image. In OpenCV we need to pass two arguments to low_threshold & high_threshold in addition to the gaussian blurred images.
+I have set the low & high threshold 50 & 150 respectively.
 
+
+
+### Region of Interest
+After the edge detection our job is to identify which are the road lanes among all the edge detected. So wee need to define a region of interest to identify the lanes. By looking at the images I guessed & defined a polygon with the help of a function I defined. 
+
+
+![Canny Images](test_images_output/canny_images)
+
+
+
+### Hough Transform
+After the Canny edge detection our job is to perform a Hough Transform to extract the lines present on the images & color them. Hough Transform will find lines by identifying all points lie on them. This is achieved through converting normal co-ordinate system to a polar co-ordinate system.
+
+![Hough Lines](test_images_output/seperated_lanes)
+
+
+### Left & Right Lane Seperation
+To be able to detect the lanes properly I have seperated left & right lanes by following below principles:
+
+- Left lane slope should be negative
+- Right lane slope should be positive
+
+Then I defined a function which can detect the left & right lanes properly
+
+In the following images I have color coded the left & right lanes
+
+![Seperate Lanes](test_images_output/seperated_lanes)
+
+### Line Extrapolation
+
+To detect a full line from the bottom of the screen, it should be able to interpolate the different points returned by the hough transform function. I have attempted to find the line by minimizing the [least squared error](https://en.wikipedia.org/wiki/Least_squares). I have imported the `stats` module from `scipy`. I got the below images as output:
+
+![final output](test_images_output/final_output)
+
+## Test on Videos
+
+Three vidoes are provided here. My pipeline is successfully running on the 10 & 27 seconds version. My implementation is working great on the first two videos but not working fine on the challenge vidoes where curves are present. As a video is a sequence of frames I used the information from previous frames to smoothen the lines. I used standard _deque_ to store the last 15 computed line coefficients. It is working very well but failing on the optional challenge video.
+
+## Shortcomings
+
+I have faced challenges initially in performing the Hough transform. I find it tricky to set the parameters manually. In the challenge video my pipleline is working fine as log as there are straight lines but failing once the curve lines are coming
+
+## Future Improvements
+
+I beileve parameter tuning of every function can be possible done dynamically. Also Deep Learning can be implemented to identify lane lines.
