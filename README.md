@@ -31,55 +31,35 @@ In this section I will cover the steps in detail to create the pipeline, which w
 Here we are going to detect white or yellow lines on images, which show a high contrast if the image is converted to grayscale. In grayscale mode road is black so anything brighter than will come out with high contrast.
 
 
-<<<<<<< HEAD
-![gray scale images](./docs/grayscale_image)
-||||||| merged common ancestors
-![gray scale images](test_images_output/grayscale_image)
-=======
-![gray scale images](/test_images_output/grayscale_image)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+![gray scale images](./my_output_images/grayscale_image.png)
+
 
 ### Apply Gaussian Blur
 Gaussian Blur is a pre-processing technique to smoothen the edges of an image. In OpenCV Gaussian blur takes a odd number of integer kernel_size. For this project I choose the Kernel size 5 by trial & error.
 
-<<<<<<< HEAD
-![Gaussian Blur Images](./docs/gaussian_blur)
-||||||| merged common ancestors
-![Gaussian Blur Images](test_images_output/gaussian_blur)
-=======
-![Gaussian Blur Images](./test_images_output/gaussian_blur)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+![Gaussian Blur Images](./my_output_images/gaussian_blur.png)
+
 
 ### Canny Edge Detection
 After successfull completion of Gaussian Blur, I have applied Canny Edge Detector. Canny edge detection is a powerful algorithm to identify the edges in an image. In OpenCV we need to pass two arguments to low_threshold & high_threshold in addition to the gaussian blurred images.
 I have set the low & high threshold 50 & 150 respectively.
 
-
+![Canny Images](./my_output_images/canny_images.png)
 
 ### Region of Interest
 After the edge detection our job is to identify which are the road lanes among all the edge detected. So wee need to define a region of interest to identify the lanes. By looking at the images I guessed & defined a polygon with the help of a function I defined. 
 
 
-<<<<<<< HEAD
-![Canny Images](./docs/canny_images)
-||||||| merged common ancestors
-![Canny Images](test_images_output/canny_images)
-=======
-![Canny Images](./test_images_output/canny_images)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+![Canny Images](./my_output_images/region_of_interest.png)
+
 
 
 
 ### Hough Transform
 After the Canny edge detection our job is to perform a Hough Transform to extract the lines present on the images & color them. Hough Transform will find lines by identifying all points lie on them. This is achieved through converting normal co-ordinate system to a polar co-ordinate system.
 
-<<<<<<< HEAD
-![Hough Lines](./docs/seperated_lanes)
-||||||| merged common ancestors
-![Hough Lines](test_images_output/seperated_lanes)
-=======
-![Hough Lines](./test_images_output/seperated_lanes)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+![Hough Images](./my_output_images/hough_lines.png)
+
 
 
 ### Left & Right Lane Seperation
@@ -92,25 +72,18 @@ Then I defined a function which can detect the left & right lanes properly
 
 In the following images I have color coded the left & right lanes
 
-<<<<<<< HEAD
-![Seperate Lanes](./docs/seperated_lanes)
-||||||| merged common ancestors
-![Seperate Lanes](test_images_output/seperated_lanes)
-=======
-![Seperate Lanes](./test_images_output/seperated_lanes)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+
+![seperated Images](./my_output_images/seperated_lanes.png)
+
+
 
 ### Line Extrapolation
 
 To detect a full line from the bottom of the screen, it should be able to interpolate the different points returned by the hough transform function. I have attempted to find the line by minimizing the [least squared error](https://en.wikipedia.org/wiki/Least_squares). I have imported the `stats` module from `scipy`. I got the below images as output:
 
-<<<<<<< HEAD
-![final output](./docs/final_output)
-||||||| merged common ancestors
-![final output](test_images_output/final_output)
-=======
-![final output](./test_images_output/final_output)
->>>>>>> 3fe93c3b4d9b4317b8b963eba2e16e3bbab776e7
+
+![final Images](./my_output_images/final_output.png)
+
 
 ## Test on Videos
 
