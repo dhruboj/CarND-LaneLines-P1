@@ -31,7 +31,7 @@ In this section I will cover the steps in detail to create the pipeline, which w
 Here we are going to detect white or yellow lines on images, which show a high contrast if the image is converted to grayscale. In grayscale mode road is black so anything brighter than will come out with high contrast.
 
 
-![gray scale images](test_images_output/grayscale_image)
+![gray scale images](https://github.com/dhruboj/CarND-LaneLines-P1/tree/master/test_images_output/grayscale_image)
 
 ### Apply Gaussian Blur
 Gaussian Blur is a pre-processing technique to smoothen the edges of an image. In OpenCV Gaussian blur takes a odd number of integer kernel_size. For this project I choose the Kernel size 5 by trial & error.
